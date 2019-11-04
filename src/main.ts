@@ -5,7 +5,7 @@ import configs from './configs'
 const SLACK_HOOK_URL = configs.slack_hook
 const WEBSITE_URL = configs.website_url
 
-let currentAptCount: number = 0
+let prevAptCount: number = 0
 
 const checkForApts = () => {
     fetch(WEBSITE_URL)
@@ -17,24 +17,28 @@ const checkForApts = () => {
         .each((index, element) => {
             if(index === 1) {
                 element.children
-                .forEach((val, index) => {
-                    if(val.name === 'a' &&
-                    val.children[1].children[0].data &&
-                    parseInt(val.children[1].children[0].data) &&
-                    parseInt(val.children[1].children[0].data) > 0 &&
-                    parseInt(val.children[1].children[0].data) !== currentAptCount  
+                .forEach((val) => {
+                    if(!(val.name === 'a' &&
+                        val.children[1].children[0].data &&
+                        parseInt(val.children[1].children[0].data))
                     ) {
-                        sendAptAlert(val.children[1].children[0].data)
-                        currentAptCount = parseInt(val.children[1].children[0].data)
+                        return
                     }
+                    const aptCount = parseInt(val.children[1].children[0].data) 
+                    if(aptCount > 0 &&
+                       aptCount !== prevAptCount  
+                    ) {
+                        sendAptAlert(aptCount)
+                    }
+                    prevAptCount = aptCount
                 })
             }
         })
     })
 }
 
-const sendAptAlert = (numOfApts: string) => {
-    const message = `There are ${numOfApts} available! Check it!!!! Now!!!! @subbu @jola https://wahlinfastigheter.se/` 
+const sendAptAlert = (numOfApts: number) => {
+    const message = `There are ${numOfApts.toString()} available apartment(s)! Check it!!!! Now!!!! @subbu @jola https://wahlinfastigheter.se/` 
     sendMessage(message)
 }
 
