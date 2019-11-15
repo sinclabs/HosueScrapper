@@ -7,10 +7,10 @@
   "scripts": {
     "start": "node dist/main.js",
     "dev": "nodemon dist/main.js",
+    "test": "node dist/tests/parseTest.spec.js",
     "build-watch": "tsc --watch",
     "build": "tsc",
-    "pkg": "pkg package.json --targets linux-x64 -o hs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pkg": "pkg package.json --targets linux-x64 -o hs"
   },
   "author": "Subbu, Jola",
   "license": "ISC",
